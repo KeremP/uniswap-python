@@ -1094,7 +1094,7 @@ class Uniswap:
         """
         add liquidity to pool and mint position nft
         """
-        address = _addr_to_str(self.address)
+        
         token_0 = pool.functions.token0().call()
         token_1 = pool.functions.token1().call()
 
@@ -1105,8 +1105,8 @@ class Uniswap:
             self.w3, abi_name="erc20", address=token_1
         )
 
-        balance_0 = token_0_instance.functions.balanceOf(address).call()
-        balance_1 = token_1_instance.functions.balanceOf(address).call()
+        balance_0 = token_0_instance.functions.balanceOf(_addr_to_str(self.address)).call()
+        balance_1 = token_1_instance.functions.balanceOf(_addr_to_str(self.address)).call()
 
         assert balance_0 > amount_0, f'Have {balance_0}, need {amount_0}: {token_0}'
         assert balance_1 > amount_1, f'Have {balance_1}, need {amount_1}: {token_1}'
