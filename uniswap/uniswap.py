@@ -1105,8 +1105,8 @@ class Uniswap:
             self.w3, abi_name="erc20", address=token_1
         )
 
-        balance_0 = self.get_token_balance(token_0)
-        balance_1 = self.get_token_balance(token_1)
+        balance_0 = self.get_token_balance(_addr_to_str(token_0))
+        balance_1 = self.get_token_balance(_addr_to_str(token_1))
 
         assert balance_0 > amount_0, f'Have {balance_0}, need {amount_0}: {token_0}'
         assert balance_1 > amount_1, f'Have {balance_1}, need {amount_1}: {token_1}'
