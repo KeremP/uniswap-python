@@ -246,7 +246,8 @@ class TestUniswap(object):
             pool = client.create_pool_instance(token0, token1, fee)
         except Exception:
             pool = client.get_pool_instance(token0, token1, fee)
-
+        
+        print(pool.address)
         # Ensuring client has sufficient balance of both tokens
         eth_to_dai = client.make_trade(get_tokens('mainnet')['ETH'], token0, qty, None)
         eth_to_dai_tx = client.w3.eth.wait_for_transaction_receipt(eth_to_dai, timeout=RECEIPT_TIMEOUT)
