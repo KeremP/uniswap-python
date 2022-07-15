@@ -1105,8 +1105,11 @@ class Uniswap:
             self.w3, abi_name="erc20", address=token_1
         )
 
-        assert token_0_instance.functions.balanceOf(address).call() > amount_0
-        assert token_1_instance.functions.balanceOf(address).call() > amount_1
+        balance_0 = token_0_instance.functions.balanceOf(address).call()
+        balance_1 = token_1_instance.functions.balanceOf(address).call()
+
+        assert balance_0 > amount_0, f'Have {balance_0}, need {amount_0}'
+        assert balance_1 > amount_1, f'Have {balance_1}, need {amount_1}'
 
         fee = pool.functions.fee().call()
         tick_lower = nearest_tick(tick_lower, fee)
