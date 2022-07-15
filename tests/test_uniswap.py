@@ -251,8 +251,23 @@ class TestUniswap(object):
         eth_to_dai = client.make_trade(get_tokens('mainnet')['ETH'], token0, qty, None)
         eth_to_dai_tx = client.w3.eth.wait_for_transaction_receipt(eth_to_dai, timeout=RECEIPT_TIMEOUT)
 
-        dai_to_usdc = client.make_trade(token0, token1, amount1*2, None)
+        dai_to_usdc = client.make_trade(token0, token1, amount1*100, None)
         dai_to_usdc_tx = client.w3.eth.wait_for_transaction_receipt(dai_to_usdc, timeout=RECEIPT_TIMEOUT)
+
+        token_0_instance = _load_contract_erc20(
+            client.w3, address=token0
+        )
+        token_1_instance = _load_contract_erc20(
+            client.w3, address=token0
+        )
+
+        balance_0 = token_0_instance.functions.balanceOf(_addr_to_str(client.address)).call()
+        balance_1 = token_1_instance.functions.balanceOf(_addr_to_str(client.address)).call()
+        print(balance_1)
+
+        assert balance_0 > amount0
+        assert balance_1 > amount1, f'Have: {balance_1} need {amount1}'
+        
 
         min_tick, max_tick = default_tick_range(fee)
         r = client.mint_liquidity(
