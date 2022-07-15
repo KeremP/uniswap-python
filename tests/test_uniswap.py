@@ -249,10 +249,10 @@ class TestUniswap(object):
         
         print(pool.address)
         # Ensuring client has sufficient balance of both tokens
-        eth_to_dai = client.make_trade(tokens['ETH'], tokens[token0], qty, None)
+        eth_to_dai = client.make_trade(tokens['ETH'], tokens[token0], qty, client.address)
         eth_to_dai_tx = client.w3.eth.wait_for_transaction_receipt(eth_to_dai, timeout=RECEIPT_TIMEOUT)
 
-        dai_to_usdc = client.make_trade(tokens[token0], tokens[token1], amount1, None)
+        dai_to_usdc = client.make_trade(tokens[token0], tokens[token1], amount1, client.address)
         dai_to_usdc_tx = client.w3.eth.wait_for_transaction_receipt(dai_to_usdc, timeout=RECEIPT_TIMEOUT)
 
         balance_0 = client.get_token_balance(tokens[token0])
