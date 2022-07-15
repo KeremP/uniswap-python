@@ -256,10 +256,8 @@ class TestUniswap(object):
         dai_to_usdc_tx = client.w3.eth.wait_for_transaction_receipt(dai_to_usdc, timeout=RECEIPT_TIMEOUT)
         assert dai_to_usdc_tx["status"]
 
-        balance_0 = client.get_token_balance(_addr_to_str(tokens[token0]))
-        balance_1 = client.get_token_balance(_addr_to_str(tokens[token1]))
-        print(balance_1)
-        print(_addr_to_str(client.address))
+        balance_0 = client.get_token_balance(tokens[token0])
+        balance_1 = client.get_token_balance(tokens[token1])
 
         assert balance_0 > amount0, f'Have: {balance_0} need {amount0}'
         assert balance_1 > amount1, f'Have: {balance_1} need {amount1}'
