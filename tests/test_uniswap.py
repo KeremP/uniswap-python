@@ -235,36 +235,37 @@ class TestUniswap(object):
     @pytest.mark.parametrize(
         "token0, token1, amount0, amount1, qty, fee",
         [
-            (get_tokens('mainnet')['DAI'], get_tokens('mainnet')['USDC'], ONE_ETH, ONE_USDC, ONE_ETH, 3000),
+            ('DAI', 'USDC', ONE_ETH, ONE_USDC, ONE_ETH, 3000),
         ]
     )
-    def test_v3_deploy_pool_with_liquidity(self, client: Uniswap, token0, token1, amount0, amount1, qty, fee):
+    def test_v3_deploy_pool_with_liquidity(self, client: Uniswap, tokens, token0, token1, amount0, amount1, qty, fee):
         if client.version != 3:
             pytest.skip("Not supported in this version of Uniswap")
 
         try:
-            pool = client.create_pool_instance(token0, token1, fee)
+            pool = client.create_pool_instance(tokens[token0], tokens[token1], fee)
         except Exception:
-            pool = client.get_pool_instance(token0, token1, fee)
+            pool = client.get_pool_instance(tokens[token0], tokens[token1], fee)
         
         print(pool.address)
         # Ensuring client has sufficient balance of both tokens
-        eth_to_dai = client.make_trade(get_tokens('mainnet')['ETH'], token0, qty, None)
+        eth_to_dai = client.make_trade(tokens['ETH'], tokens[token0], qty, None)
         eth_to_dai_tx = client.w3.eth.wait_for_transaction_receipt(eth_to_dai, timeout=RECEIPT_TIMEOUT)
 
-        dai_to_usdc = client.make_trade(token0, token1, amount1*100, None)
+        dai_to_usdc = client.make_trade(tokens[token0], tokens[token1], amount1, None)
         dai_to_usdc_tx = client.w3.eth.wait_for_transaction_receipt(dai_to_usdc, timeout=RECEIPT_TIMEOUT)
 
         token_0_instance = _load_contract_erc20(
-            client.w3, address=token0
+            client.w3, address=tokens[token0]
         )
         token_1_instance = _load_contract_erc20(
-            client.w3, address=token0
+            client.w3, address=tokens[token1]
         )
 
         balance_0 = token_0_instance.functions.balanceOf(_addr_to_str(client.address)).call()
         balance_1 = token_1_instance.functions.balanceOf(_addr_to_str(client.address)).call()
         print(balance_1)
+        print(_addr_to_str(client.address))
 
         assert balance_0 > amount0
         assert balance_1 > amount1, f'Have: {balance_1} need {amount1}'
